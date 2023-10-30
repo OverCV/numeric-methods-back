@@ -24,14 +24,28 @@ def read_euler(euler_id: int, db: Session) -> EulerSchema:
     return EulerSchema(**db_euler.__dict__)
 
 
+def replace_euler(euler_id: int, euler: EulerUpdate, db: Session) -> EulerSchema:
+    db_euler: Euler = db.query(Euler).filter(
+        Euler.id == euler_id
+    ).first()
+    for key, value in euler.model_dump().items():
+        setattr(db_euler, key, value)
+    db.commit()
+    db.refresh(db_euler)
+
+    return EulerSchema(**db_euler.__dict__)
+
+
 def update_euler(euler_id: int, euler: EulerUpdate, db: Session) -> EulerSchema:
     db_euler: Euler = db.query(Euler).filter(
         Euler.id == euler_id
     ).first()
-    for attr, value in vars(euler).items():
-        setattr(db_euler, attr, value)  # if value else None
+    for key, value in euler.model_dump().items():
+        if (value is not None) or (value != ''):
+            setattr(db_euler, key, value)
     db.commit()
     db.refresh(db_euler)
+
     return EulerSchema(**db_euler.__dict__)
 
 

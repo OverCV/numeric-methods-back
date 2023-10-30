@@ -20,5 +20,5 @@ class Euler(Base):
     a: float = Column(Integer, nullable=False, default=0.0)
     N: float = Column(Integer, nullable=False, default=0.0)
 
-    euler_graph_url: str = Column(String(255), nullable=True)
-    euler_error_url: str = Column(String(255), nullable=True)
+    euler_graph_url: str = Column(String(255), nullable=False, default='')
+    euler_error_url: str = Column(String(255), nullable=False, default='')

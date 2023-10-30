@@ -5,11 +5,11 @@ from typing import Optional, List
 class EulerBase(BaseModel):
     title: str
 
-    t0: Optional[float] = Field(default=0.0)
-    x0: Optional[float] = Field(default=0.0)
-    t: Optional[float] = Field(default=0.0)
+    t0: Optional[float]
+    x0: Optional[float]
+    t: Optional[float]
 
-    a: Optional[float] = Field(default=0.0)
+    a: Optional[float]
     N: float
 
 
@@ -21,17 +21,18 @@ class EulerUpdate(BaseModel):
     title: str
     func: str
 
-    t0: Optional[float] = Field(default=0.0)
-    x0: Optional[float] = Field(default=0.0)
-    t: Optional[float] = Field(default=0.0)
+    t0: Optional[float]
+    x0: Optional[float]
+    t: Optional[float]
 
-    a: Optional[float] = Field(default=0.0)
+    a: Optional[float]
     N: float
 
 
 class EulerSchema(EulerBase):
-    id: int
-    x: float
-
     euler_graph_url: str
     euler_error_url: str
+
+    x: float
+    func: str
+    id: int
