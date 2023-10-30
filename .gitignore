@@ -1,0 +1,21 @@
+# Ignore the pycache
+*__pycache__*
+
+# Ignore the virtual environment
+.env/
+.venv/
+venv/
+ENV/
+
+# Ignore the logs
+logs/
+
+# Ignore the coverage
+.coverage
+htmlcov/
+
+# Ignore the database
+*.sqlite3
+
+# Ignore unitary tests
+tests/
