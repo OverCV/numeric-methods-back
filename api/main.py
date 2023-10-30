@@ -1,24 +1,12 @@
-<<<<<<< HEAD
-from fastapi.middleware.cors import CORSMiddleware
-from database.db import Base, engine
-from fastapi import FastAPI
-=======
->>>>>>> Feature/B000EulerRoutes
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-<<<<<<< HEAD
-Base.metadata.create_all(bind=engine)
-
-
-=======
 from database.db import Base, engine
 from routers import euler
 
 
 Base.metadata.create_all(bind=engine)
->>>>>>> Feature/B000EulerRoutes
 app: FastAPI = FastAPI()
 
 app.title = 'Numeric methods | Models'
