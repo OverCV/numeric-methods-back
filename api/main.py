@@ -1,7 +1,10 @@
 from fastapi.middleware.cors import CORSMiddleware
+from database.db import Base, engine
 from fastapi import FastAPI
 import uvicorn
 
+
+Base.metadata.create_all(bind=engine)
 app: FastAPI = FastAPI()
 
 app.title = 'Numeric methods | Models'
