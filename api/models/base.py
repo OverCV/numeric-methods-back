@@ -1,25 +1,50 @@
 from typing import Optional
 from sqlalchemy.orm import relationship
-from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import (
+    Table, Column, Integer, String, Boolean, ForeignKey, Float
+)
 
 from database.db import Base
 from constants.const import *
 
 
-class Euler(Base):
-    __tablename__ = 'euler'
+class Approximation(Base):
+    __tablename__ = 'approximations'
+    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    title = Column(String(63), nullable=False)
+
+    f = Column(String(255), default=EXP_FUNCTION)
+
+    t0: float = Column(Float, default=0.0)
+    x0: float = Column(Float, default=0.0)
+    t: float = Column(Float, default=0.0)
+    x: float = Column(Float, default=0.0)
+
+    a: float = Column(Float, default=0.0)
+    h: float = Column(Float, default=0.0)
+    N: int = Column(Integer, default=0.0)
+
+    constants = relationship('Constant', back_populates='approximation')
+    graphs = relationship('Graph', back_populates='approximation')
+
+
+class Constant(Base):
+    __tablename__ = 'constants'
+    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name: str = Column(String(31), nullable=False)
+    value: int = Column(Float, default=0.0)
+
+    approximation_id = Column(Integer, ForeignKey('approximations.id'))
+    approximation = relationship('Approximation', back_populates='constants')
+
+
+class Graph(Base):
+    __tablename__ = 'graphs'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    title: str = Column(String(63), nullable=False)
-    func: str = Column(String(255), nullable=False, default=EULER_FUNCTION)
+    title = Column(String(63), nullable=False)
 
-    t0: float = Column(Integer, nullable=False, default=0.0)
-    x0: float = Column(Integer, nullable=False, default=0.0)
-    t: float = Column(Integer, nullable=False, default=0.0)
-    x: float = Column(Integer, default=0.0)
+    image_url = Column(String(255), default='')
+    error_url = Column(String(255), default='')
 
-    a: float = Column(Integer, nullable=False, default=0.0)
-    N: float = Column(Integer, nullable=False, default=0.0)
-
-    euler_graph_url: str = Column(String(255), nullable=False, default='')
-    euler_error_url: str = Column(String(255), nullable=False, default='')
-
+    approximation_id = Column(Integer, ForeignKey('approximations.id: int'))
+    approximation = relationship('Approximation', back_populates='graphs')
