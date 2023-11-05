@@ -22,3 +22,4 @@ class Euler(Base):
 
     euler_graph_url: str = Column(String(255), nullable=False, default='')
     euler_error_url: str = Column(String(255), nullable=False, default='')
+
