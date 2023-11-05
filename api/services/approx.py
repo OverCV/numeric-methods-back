@@ -2,16 +2,18 @@ from sqlalchemy.orm import Session
 from models.base import Approximation as Approx
 from schemas.approx import ApproxCreate, ApproxRead, ApproxUpdate
 from typing import List
-# from constants.const import approx_method
-# import matplotlib.pyplot as plt
 
 
 def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
-    db_approx: Approx = Approx(**approximation.model_dump())
-
+    print(f'APPROXIMATION\n{approximation}\n')
     if exist_approx_title(approximation.title, db):
         return None
+    db_approx: Approx = Approx(**approximation.model_dump())
 
+    # db_approx.func: str = 'x + t'
+    # db_approx.x: float = 0.0
+
+    print(f'\nAPPROX{db_approx}\n')
     db.add(db_approx)
     db.commit()
     db.refresh(db_approx)
@@ -150,5 +152,3 @@ def calculate_approx(approx: Approx) -> None:
 #     approx_error = eval(approx.approx_error_url)
 #     plot_approx_graph(approx_graph, approx)
 #     plot_approx_error(approx_error, approx)
-
-

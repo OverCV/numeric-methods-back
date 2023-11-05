@@ -20,7 +20,7 @@ async def post_approx(approx: ApproxCreate, db: Session = Depends(get_db)):
     if created_approx is None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f'approx_created title {created_approx.title} already exists'
+            detail=f'approx_created title {approx.title} already exists'
         )
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,

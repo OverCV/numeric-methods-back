@@ -3,6 +3,7 @@ from typing import Optional, List
 
 from schemas.constant import ConstantRead
 from schemas.graph import GraphRead
+from constants.const import *
 
 
 class BaseApprox(BaseModel):
@@ -22,7 +23,7 @@ class ApproxCreate(BaseApprox):
 
 class ApproxUpdate(BaseModel):
     title: str
-    func: str
+    f: str
 
     t0: float
     x0: float
@@ -34,7 +35,7 @@ class ApproxUpdate(BaseModel):
 
 class ApproxRead(BaseApprox):
     x: float
-    func: str
+    f: str
     id: int
 
     constants: List[ConstantRead] = []
