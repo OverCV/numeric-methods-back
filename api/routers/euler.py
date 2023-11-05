@@ -9,7 +9,7 @@ from schemas.euler import EulerCreate, EulerUpdate, EulerSchema
 from services.euler import (
     create_euler, read_eulers, read_euler, replace_euler,
     update_euler, remove_euler, exist_euler_title, exist_euler_id,
-    # calculate_euler
+    calculate_euler
 )
 
 router = APIRouter()

@@ -140,6 +140,18 @@ def remove_euler(euler_id: int, db: Session) -> EulerSchema:
 
 """ Euler core algorithm """
 
+def calculate_euler(euler: Euler) -> None:
+    h = (euler.t - euler.t0) / euler.N
+    t = euler.t0
+    x = euler.x0
+    euler.T = [t]
+    euler.X = [x]
+    for i in range(int(euler.N)):
+        # x += h * euler_method(euler.func, t, x)
+        t += h
+        euler.T.append(t)
+        euler.X.append(x)
+
 
 # def euler_method_algorithm(euler: Euler) -> List[float]:
 #     h = (euler.t - euler.t0) / euler.N
