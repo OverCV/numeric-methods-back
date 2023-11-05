@@ -8,7 +8,7 @@ from constants.const import *
 
 class Euler(Base):
     __tablename__ = 'euler'
-    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title: str = Column(String(63), nullable=False)
     func: str = Column(String(255), nullable=False, default=EULER_FUNCTION)
 
@@ -22,3 +22,4 @@ class Euler(Base):
 
     euler_graph_url: str = Column(String(255), nullable=False, default='')
     euler_error_url: str = Column(String(255), nullable=False, default='')
+
