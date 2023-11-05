@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 
 from schemas.constant import ConstantRead
+from schemas.graph import GraphRead
 
 
 class BaseApprox(BaseModel):
@@ -37,4 +38,4 @@ class ApproxRead(BaseApprox):
     id: int
 
     constants: List[ConstantRead] = []
-    graphs: List[dict] = []
+    graphs: List[GraphRead] = []
