@@ -5,7 +5,7 @@ from schemas.constant import ConstantRead
 
 
 class BaseApprox(BaseModel):
-    title: str = Field(..., max_length=63)
+    title: str
 
     t0: float
     x0: float
