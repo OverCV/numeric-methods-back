@@ -1,7 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
-    Column, Integer, String, ForeignKey, Float
+    Table, Column, Integer, String, Boolean, ForeignKey, Float
 )
 
 from database.db import Base
