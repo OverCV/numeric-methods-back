@@ -1,1 +1,2 @@
-EXP_FUNCTION = 'x * E**(t)'
+EXP_FUNCTION: str = 'x * E**(t)'
+DATA: str = 'data'

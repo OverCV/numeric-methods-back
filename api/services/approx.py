@@ -1,19 +1,13 @@
 from sqlalchemy.orm import Session
-from models.base import Approximation as Approx
+from models.base import Approximation
 from schemas.approx import ApproxCreate, ApproxRead, ApproxUpdate
 from typing import List
 
 
 def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
-    print(f'APPROXIMATION\n{approximation}\n')
     if exist_approx_title(approximation.title, db):
         return None
-    db_approx: Approx = Approx(**approximation.model_dump())
-
-    # db_approx.func: str = 'x + t'
-    # db_approx.x: float = 0.0
-
-    print(f'\nAPPROX{db_approx}\n')
+    db_approx: Approximation = Approximation(**approximation.model_dump())
     db.add(db_approx)
     db.commit()
     db.refresh(db_approx)
@@ -21,20 +15,20 @@ def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
 
 
 def read_approxs(db: Session) -> List[ApproxRead]:
-    db_approxs: List[Approx] = db.query(Approx).all()
+    db_approxs: List[Approximation] = db.query(Approximation).all()
     return [ApproxRead(**approx.__dict__) for approx in db_approxs]
 
 
 def read_approx(approx_id: int, db: Session) -> ApproxRead:
-    db_approx: Approx = db.query(Approx).filter(
-        Approx.id == approx_id
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.id == approx_id
     ).first()
     return ApproxRead(**db_approx.__dict__)
 
 
 def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxRead:
-    db_approx: Approx = db.query(Approx).filter(
-        approx.id == approx_id
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.id == approx_id
     ).first()
 
     if not exist_approx_id(approx_id, db):
@@ -49,8 +43,8 @@ def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxR
 
 
 def update_approx(approx_id: int, approximation: ApproxUpdate, db: Session) -> ApproxRead:
-    db_approx: Approx = db.query(Approx).filter(
-        approximation.id == approx_id
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.id == approx_id
     ).first()
 
     if not exist_approx_id(approx_id, db):
@@ -65,28 +59,27 @@ def update_approx(approx_id: int, approximation: ApproxUpdate, db: Session) -> A
     return ApproxRead(**db_approx.__dict__)
 
 
-def remove_approx(approx_id: int, db: Session) -> ApproxRead:
+def remove_approx(approx_id: int, db: Session) -> bool:
     if not exist_approx_id(approx_id, db):
-        return None
-
-    db_approx: Approx = db.query(Approx).filter(
-        Approx.id == approx_id
+        return False
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.id == approx_id
     ).first()
     db.delete(db_approx)
     db.commit()
-    return ApproxRead(**db_approx.__dict__)
+    return True
 
 
 def exist_approx_title(title: str, db: Session) -> bool:
-    db_approx: Approx = db.query(Approx).filter(
-        Approx.title == title
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.title == title
     ).first()
     return False if db_approx is None else True
 
 
 def exist_approx_id(approx_id: int, db: Session) -> bool:
-    db_approx: Approx = db.query(Approx).filter(
-        Approx.id == approx_id
+    db_approx: Approximation = db.query(Approximation).filter(
+        Approximation.id == approx_id
     ).first()
     return False if db_approx is None else True
 
@@ -94,7 +87,7 @@ def exist_approx_id(approx_id: int, db: Session) -> bool:
 """ approx core algorithm """
 
 
-def calculate_approx(approx: Approx) -> None:
+def calculate_approx(approx: Approximation) -> None:
     h = (approx.t - approx.t0) / approx.N
     t = approx.t0
     x = approx.x0
