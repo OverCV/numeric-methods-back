@@ -1,1 +1,1 @@
-EULER_FUNCTION = 'x * E**(a * t)'
+EXP_FUNCTION = 'x * E**(t)'

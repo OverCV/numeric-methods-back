@@ -1,24 +1,49 @@
 from typing import Optional
 from sqlalchemy.orm import relationship
-from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import (
+    Table, Column, Integer, String, Boolean, ForeignKey, Float
+)
 
 from database.db import Base
 from constants.const import *
 
 
-class Euler(Base):
-    __tablename__ = 'euler'
+class Approximation(Base):
+    __tablename__ = 'approximations'
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    title: str = Column(String(63), nullable=False)
-    func: str = Column(String(255), nullable=False, default=EULER_FUNCTION)
+    f: str = Column(String(255), default=EXP_FUNCTION)
+    x: float = Column(Float, default=0.0)
 
-    t0: float = Column(Integer, nullable=False, default=0.0)
-    x0: float = Column(Integer, nullable=False, default=0.0)
-    t: float = Column(Integer, nullable=False, default=0.0)
-    x: float = Column(Integer, default=0.0)
+    title = Column(String(63), default=f'Approximation {id}')
 
-    a: float = Column(Integer, nullable=False, default=0.0)
-    N: float = Column(Integer, nullable=False, default=0.0)
+    t0: float = Column(Float)
+    x0: float = Column(Float)
+    t: float = Column(Float)
 
-    euler_graph_url: str = Column(String(255), nullable=False, default='')
-    euler_error_url: str = Column(String(255), nullable=False, default='')
+    h: float = Column(Float)
+    N: int = Column(Integer)
+
+    constants = relationship('Constant', back_populates='approximation')
+    graphs = relationship('Graph', back_populates='approximation')
+
+
+class Constant(Base):
+    __tablename__ = 'constants'
+    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name: str = Column(String(31), nullable=False)
+    value: int = Column(Float)
+
+    approximation_id = Column(Integer, ForeignKey('approximations.id'))
+    approximation = relationship('Approximation', back_populates='constants')
+
+
+class Graph(Base):
+    __tablename__ = 'graphs'
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    title = Column(String(63), nullable=False)
+
+    image_url = Column(String(255))
+    error_url = Column(String(255))
+
+    approximation_id = Column(Integer, ForeignKey('approximations.id'))
+    approximation = relationship('Approximation', back_populates='graphs')
