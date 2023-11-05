@@ -3,13 +3,13 @@ from models.base import Approximation as Approx
 from schemas.approx import ApproxCreate, ApproxRead, ApproxUpdate
 from typing import List
 # from constants.const import approx_method
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def create_approx(approx: ApproxCreate, db: Session) -> ApproxRead:
-    db_approx: Approx = Approx(**approx.model_dump())
+def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
+    db_approx: Approx = Approx(**approximation.model_dump())
 
-    if exist_approx_title(approx.title, db):
+    if exist_approx_title(approximation.title, db):
         return None
 
     db.add(db_approx)
@@ -31,7 +31,7 @@ def read_approx(approx_id: int, db: Session) -> ApproxRead:
 
 
 def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxRead:
-    db_approx: Approx = db.query(approx).filter(
+    db_approx: Approx = db.query(Approx).filter(
         approx.id == approx_id
     ).first()
 
@@ -46,15 +46,15 @@ def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxR
     return ApproxRead(**db_approx.__dict__)
 
 
-def update_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxRead:
-    db_approx: Approx = db.query(approx).filter(
-        approx.id == approx_id
+def update_approx(approx_id: int, approximation: ApproxUpdate, db: Session) -> ApproxRead:
+    db_approx: Approx = db.query(Approx).filter(
+        approximation.id == approx_id
     ).first()
 
     if not exist_approx_id(approx_id, db):
         return None
 
-    for key, value in approx.model_dump().items():
+    for key, value in approximation.model_dump().items():
         if (value is not None) or (value != ''):
             setattr(db_approx, key, value)
     db.commit()

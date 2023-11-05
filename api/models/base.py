@@ -20,7 +20,6 @@ class Approximation(Base):
     t: float = Column(Float, default=0.0)
     x: float = Column(Float, default=0.0)
 
-    a: float = Column(Float, default=0.0)
     h: float = Column(Float, default=0.0)
     N: int = Column(Integer, default=0.0)
 
@@ -46,5 +45,5 @@ class Graph(Base):
     image_url = Column(String(255), default='')
     error_url = Column(String(255), default='')
 
-    approximation_id = Column(Integer, ForeignKey('approximations.id: int'))
+    approximation_id = Column(Integer, ForeignKey('approximations.id'))
     approximation = relationship('Approximation', back_populates='graphs')

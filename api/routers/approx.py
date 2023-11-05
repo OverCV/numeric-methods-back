@@ -6,32 +6,31 @@ from typing import List
 
 from database.db import get_db
 from schemas.approx import ApproxCreate, ApproxRead, ApproxUpdate
-# from services.approx import (
-#     create_approx, read_approxs, read_approx, replace_approx,
-#     update_approx, remove_approx, exist_approx_title, exist_approx_id,
-#     calculate_approx
-# )
+from services.approx import (
+    create_approx, read_approxs, read_approx,
+    replace_approx, update_approx, remove_approx
+)
 
 router = APIRouter()
 
 
-# @router.post('/', response_model=approxSchema)
-# async def post_approx(approx: approxCreate, db: Session = Depends(get_db)):
-#     let 
-#     if exist_approx_title(approx.title, db):
-#         raise HTTPException(
-#             status_code=status.HTTP_409_CONFLICT,
-#             detail=f'approx title {approx.title} already exists'
-#         )
-#     return JSONResponse(
-#         status_code=status.HTTP_201_CREATED,
-#         content=jsonable_encoder(create_approx(approx, db))
-#     )
+@router.post('/', response_model=ApproxRead)
+async def post_approx(approx: ApproxCreate, db: Session = Depends(get_db)):
+    created_approx: ApproxRead = create_approx(approx, db)
+    if created_approx is None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f'approx_created title {created_approx.title} already exists'
+        )
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content=jsonable_encoder(created_approx)
+    )
 
 
-# @router.get('/', response_model=List[approxSchema])
-# async def get_approxs(db: Session = Depends(get_db)) -> List[approxSchema]:
-#     approxs: List[approxSchema] = read_approxs(db)
+# @router.get('/', response_model=List[ApproxRead])
+# async def get_approxs(db: Session = Depends(get_db)) -> List[ApproxRead]:
+#     approxs: List[ApproxRead] = read_approxs(db)
 #     if not approxs:
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,
@@ -43,8 +42,8 @@ router = APIRouter()
 #     )
 
 
-# @router.get('/{approx_id}', response_model=approxSchema)
-# async def get_approx(approx_id: int, db: Session = Depends(get_db)) -> approxSchema:
+# @router.get('/{approx_id}', response_model=ApproxRead)
+# async def get_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,
@@ -56,8 +55,8 @@ router = APIRouter()
 #     )
 
 
-# @router.put('/{approx_id}', response_model=approxSchema)
-# async def put_approx(approx_id: int, approx: approxUpdate, db: Session = Depends(get_db)) -> approxSchema:
+# @router.put('/{approx_id}', response_model=ApproxRead)
+# async def put_approx(approx_id: int, approx: approxUpdate, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,
@@ -69,8 +68,8 @@ router = APIRouter()
 #     )
 
 
-# @router.patch('/{approx_id}', response_model=approxSchema)
-# async def patch_approx(approx_id: int, approx: approxUpdate, db: Session = Depends(get_db)) -> approxSchema:
+# @router.patch('/{approx_id}', response_model=ApproxRead)
+# async def patch_approx(approx_id: int, approx: approxUpdate, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,
@@ -82,8 +81,8 @@ router = APIRouter()
 #     )
 
 
-# @router.delete('/{approx_id}', response_model=approxSchema)
-# async def delete_approx(approx_id: int, db: Session = Depends(get_db)) -> approxSchema:
+# @router.delete('/{approx_id}', response_model=ApproxRead)
+# async def delete_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,
@@ -95,8 +94,8 @@ router = APIRouter()
 #     )
 
 
-# @router.get('/solve/{approx_id}', response_model=approxSchema)
-# async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> approxSchema:
+# @router.get('/solve/{approx_id}', response_model=ApproxRead)
+# async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):
 #         raise HTTPException(
 #             status_code=status.HTTP_404_NOT_FOUND,

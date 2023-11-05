@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database.db import Base, engine
-from routers import euler
+from routers import approx
 
 
 Base.metadata.create_all(bind=engine)
@@ -16,7 +16,7 @@ origins = [
     'http://localhost:4200',
 ]
 
-app.include_router(euler.router, tags=['Euler'], prefix='/euler')
+app.include_router(approx.router, tags=['Approx'], prefix='/approx')
 
 
 app.add_middleware(
