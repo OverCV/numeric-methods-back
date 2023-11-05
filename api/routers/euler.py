@@ -8,7 +8,8 @@ from database.db import get_db
 from schemas.euler import EulerCreate, EulerUpdate, EulerSchema
 from services.euler import (
     create_euler, read_eulers, read_euler, replace_euler,
-    update_euler, remove_euler, exist_euler_title, exist_euler_id
+    update_euler, remove_euler, exist_euler_title, exist_euler_id,
+    # calculate_euler
 )
 
 router = APIRouter()
@@ -90,4 +91,17 @@ async def delete_euler(euler_id: int, db: Session = Depends(get_db)) -> EulerSch
     return JSONResponse(
         status_code=status.HTTP_202_ACCEPTED,
         content=jsonable_encoder(remove_euler(euler_id, db))
+    )
+
+
+@router.get('/solve/{euler_id}', response_model=EulerSchema)
+async def solve_euler(euler_id: int, db: Session = Depends(get_db)) -> EulerSchema:
+    if not exist_euler_id(euler_id, db):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Euler id {euler_id} not found'
+        )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=jsonable_encoder(calculate_euler(euler_id, db))
     )
