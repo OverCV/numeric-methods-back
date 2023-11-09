@@ -12,13 +12,21 @@ class Approximation(Base):
     __tablename__ = 'approximations'
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
     f: str = Column(String(255), default=EXP_FUNCTION)
-    x: float = Column(Float, default=0.0)
+
+    result: float = Column(Float, default=0.0)
 
     title = Column(String(63), default=f'Approximation {id}')
 
-    t0: float = Column(Float)
-    x0: float = Column(Float)
-    t: float = Column(Float)
+    ind_var: str = Column(String(31), default='t0')
+    ind_value: float = Column(Float)
+
+    dep_var: str = Column(String(31), default='x0')
+    dep_value: float = Column(Float)
+
+    eval_value: float = Column(Float)
+
+    # x0: float = Column(Float)
+    # t: float = Column(Float)
 
     h: float = Column(Float)
     N: int = Column(Integer)

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.base import Approximation
 from schemas.approx import ApproxCreate, ApproxRead, ApproxUpdate
+from constants.const import EXP_FUNCTION
 from typing import List
 
 
@@ -8,6 +9,10 @@ def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
     if exist_approx_title(approximation.title, db):
         return None
     db_approx: Approximation = Approximation(**approximation.model_dump())
+
+    if db_approx.f == '' or db_approx.f is None:
+        db_approx.f: str = EXP_FUNCTION
+
     db.add(db_approx)
     db.commit()
     db.refresh(db_approx)

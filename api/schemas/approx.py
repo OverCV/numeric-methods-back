@@ -8,10 +8,15 @@ from constants.const import *
 
 class BaseApprox(BaseModel):
     title: str
+    f: str
 
-    t0: float
-    x0: float
-    t: float
+    ind_var: str
+    ind_value: float
+
+    dep_var: str
+    dep_value: float
+
+    eval_value: float
 
     h: float
     N: int
@@ -21,20 +26,12 @@ class ApproxCreate(BaseApprox):
     pass
 
 
-class ApproxUpdate(BaseModel):
-    title: str
-    f: str
-
-    t0: float
-    x0: float
-    t: float
-
-    h: float
-    N: int
+class ApproxUpdate(BaseApprox):
+    pass
 
 
 class ApproxRead(BaseApprox):
-    x: float
+    result: float
     f: str
     id: int
 

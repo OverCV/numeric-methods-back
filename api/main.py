@@ -34,3 +34,5 @@ if __name__ == '__main__':
     kwargs = {'host': 'localhost', 'port': 8000}
     kwargs.update({'debug': True, 'reload': True})
     uvicorn.run('main:app', **kwargs, reload=True)
+
+
