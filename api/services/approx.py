@@ -11,7 +11,7 @@ def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
     db_approx: Approximation = Approximation(**approximation.model_dump())
 
     if db_approx.f == '' or db_approx.f is None:
-        db_approx.f: str = EXP_FUNCTION
+        db_approx.f: str = f'{db_approx.dep_var} + E**({db_approx.ind_var})'
 
     db.add(db_approx)
     db.commit()
@@ -41,6 +41,10 @@ def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxR
 
     for key, value in approx.model_dump().items():
         setattr(db_approx, key, value)
+
+    if db_approx.f == '' or db_approx.f is None:
+        db_approx.f: str = f'{db_approx.dep_var} + E**({db_approx.ind_var})'
+
     db.commit()
     db.refresh(db_approx)
 
