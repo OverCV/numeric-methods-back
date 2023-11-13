@@ -21,7 +21,7 @@ def create_approx(approximation: ApproxCreate, db: Session) -> ApproxRead:
 
 def read_approxs(db: Session) -> List[ApproxRead]:
     db_approxs: List[Approximation] = db.query(Approximation).all()
-    return [ApproxRead(**approx.__dict__) for approx in db_approxs]
+    return [ApproxRead(**approx.__dict__) for approx in reversed(db_approxs)]
 
 
 def read_approx(approx_id: int, db: Session) -> ApproxRead:

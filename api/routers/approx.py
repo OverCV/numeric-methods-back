@@ -98,6 +98,8 @@ async def delete_approx(approx_id: int, db: Session = Depends(get_db)) -> bool:
     )
 
 
+
+
 # @router.get('/solve/{approx_id}', response_model=ApproxRead)
 # async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxRead:
 #     if not exist_approx_id(approx_id, db):

@@ -10,7 +10,7 @@ from constants.const import *
 
 class Approximation(Base):
     __tablename__ = 'approximations'
-    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
     f: str = Column(String(255), default=EXP_FUNCTION)
 
     result: float = Column(Float, default=0.0)
@@ -25,9 +25,6 @@ class Approximation(Base):
 
     eval_value: float = Column(Float)
 
-    # x0: float = Column(Float)
-    # t: float = Column(Float)
-
     h: float = Column(Float)
     N: int = Column(Integer)
 
@@ -37,7 +34,7 @@ class Approximation(Base):
 
 class Constant(Base):
     __tablename__ = 'constants'
-    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
     name: str = Column(String(31), nullable=False)
     value: int = Column(Float)
 
@@ -47,7 +44,7 @@ class Constant(Base):
 
 class Graph(Base):
     __tablename__ = 'graphs'
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(63), nullable=False)
 
     image_url = Column(String(255))
