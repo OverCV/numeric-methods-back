@@ -29,7 +29,7 @@ async def get_consts(db: Session = Depends(get_db)) -> List[ConstantResponse]:
     )
 
 
-@router.post('/', response_model=ConstantResponse)
+@router.post('/{approx_id}', response_model=ConstantResponse)
 async def post_const(approx_id: int, const: ConstantCreate, db: Session = Depends(get_db)):
     created_const, code = create_const(approx_id, const, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:

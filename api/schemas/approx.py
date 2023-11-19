@@ -33,5 +33,8 @@ class ApproxUpdate(ApproxRequest):
 class ApproxResponse(ApproxRequest):
     id: int
 
-    # constants: List[ConstantRead] = []
-    # graphs: List[GraphRead] = []
+    # graphs: List[GraphResponse] = []
+    # constants: List[ConstantResponse] = []
+
+    # class Config:
+    #     orm_mode = True

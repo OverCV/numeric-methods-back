@@ -2,6 +2,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from models.base import Approximation, Constant
 from services.core.constants import get_consts_dict
+from constants.const import REGEX
 import re
 
 
@@ -30,18 +31,26 @@ def exist_approx_title(title: str, db: Session) -> bool:
     return False if db_approx is None else True
 
 
-def validations(approx: Approximation, db: Session) -> bool:
+def validate_consts(approx: Approximation, db: Session) -> bool:
+
     consts = get_consts_dict(approx.id, db)
-    chars: list[str] = approx.f.split(' ')
+    tokens = re.findall(REGEX, approx.f)
 
-    for key in consts.keys():
-        if key not in chars:
-            return False
-
-    for char in chars:
-        if not re.match(r'^[a-zA-Z]+\d+$', char):
-            continue
-        if char not in consts.keys():
+    for cte in consts.keys():
+        if cte not in tokens:
             return False
 
     return True
+
+
+def validate_vars(approx: Approximation) -> bool:
+    chars: list[str] = extract_variables(approx.f)
+    return (approx.dep_var in chars) and (approx.ind_var in chars)
+
+
+def extract_variables(expression):
+    exclude = ['sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'e', 'E', 'pi', 'PI']
+    tokens = re.findall(REGEX, expression)
+    variables = [word for word in tokens if word not in exclude]
+
+    return variables

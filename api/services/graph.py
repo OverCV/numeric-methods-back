@@ -3,6 +3,7 @@ from models.base import Graph
 from schemas.graph import GraphCreate, GraphResponse, GraphUpdate
 from typing import List
 
+
 def instance_graph(graph: GraphCreate, db: Session) -> Graph:
     if exist_graph_title(graph.title, db):
         return None
@@ -15,10 +16,14 @@ def instance_graph(graph: GraphCreate, db: Session) -> Graph:
     return db_graph
 
 
-def create_graph(graph: GraphCreate, db: Session) -> GraphResponse:
+def create_graph(graph: GraphCreate, approx_id: int, db: Session) -> GraphResponse:
     if exist_graph_title(graph.title, db):
         return None
-    db_graph: Graph = Graph(**graph.model_dump())
+
+    db_graph: Graph = Graph(
+        **graph.model_dump(),
+        approximation_id=approx_id
+    )
 
     db.add(db_graph)
     db.commit()

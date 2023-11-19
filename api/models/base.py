@@ -26,8 +26,14 @@ class Approximation(Base):
     h: float = Column(Float)
     N: int = Column(Integer)
 
-    constants = relationship('Constant', back_populates='approximation')
-    graphs = relationship('Graph', back_populates='approximation')
+    constants = relationship(
+        'Constant', back_populates='approximation',        uselist=True,
+        cascade='all, delete-orphan'
+    )
+    graphs = relationship(
+        'Graph', back_populates='approximation',
+        cascade='all, delete-orphan'
+    )
 
 
 class Constant(Base):
@@ -50,5 +56,7 @@ class Graph(Base):
     image_url = Column(String(255))
     error_url = Column(String(255))
 
-    approximation_id = Column(Integer, ForeignKey('approximations.id'))
-    approximation = relationship('Approximation', back_populates='graphs')
+    approximation_id = Column(
+        Integer, ForeignKey('approximations.id'), nullable=True
+    )
+    approximation = relationship('Approximation', back_populates='graphs',)

@@ -43,6 +43,12 @@ def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxR
     if not vh.exist_approx_id(approx_id, db):
         return None
 
+    if vh.exist_approx_title(approx.title, db):
+        return None
+
+    if not vh.validate_vars(approx):
+        return None
+
     db_approx: Approximation = db.query(Approximation).filter(
         Approximation.id == approx_id
     ).first()
@@ -59,20 +65,20 @@ def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxR
     return ApproxResponse(**db_approx.__dict__)
 
 
-def update_approx(approx_id: int, approximation: ApproxUpdate, db: Session) -> ApproxResponse:
+def update_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxResponse:
     db_approx: Approximation = db.query(Approximation).filter(
         Approximation.id == approx_id
     ).first()
 
-    if not vh.exist_approx_id(approx_id, db):
+    if vh.exist_approx_title(approx.title, db):
         return None
 
-    if vh.exist_approx_const_title(approximation, db):
+    if vh.exist_approx_const_title(approx, db):
         return None
 
     for key, value in db_approx.model_dump().items():
         if (value is None) or (value == ''):
-            setattr(db_approx, approximation[key], approximation[value])
+            setattr(db_approx, approx[key], approx[value])
     db.commit()
     db.refresh(db_approx)
 
@@ -97,14 +103,7 @@ def remove_approx(approx_id: int, db: Session) -> bool:
     return True
 
 
-def read_graphs(approx_id: int, db: Session) -> List[GraphResponse]:
-    db_graphs: List[Graph] = db.query(Graph).filter(
-        Graph.approximation_id == approx_id
-    ).all()
-    return [GraphResponse(**graph.__dict__) for graph in db_graphs]
-
-
-def create_graphs(approx_id: int, db: Session) -> int:
+def approx_graphs(approx_id: int, db: Session) -> int:
     if not vh.exist_approx_id(approx_id, db):
         return status.HTTP_404_NOT_FOUND
 
@@ -115,7 +114,7 @@ def create_graphs(approx_id: int, db: Session) -> int:
     if db_approx is None:
         return status.HTTP_404_NOT_FOUND
 
-    validated: bool = vh.validations(db_approx, db)
+    validated: bool = vh.validate_consts(db_approx, db)
     if not validated:
         return status.HTTP_409_CONFLICT
 
@@ -145,15 +144,20 @@ def create_graphs(approx_id: int, db: Session) -> int:
         'rk4': rk4_data
     }
 
-    # ? Asociate the graphs to the approximation ? #
-
     graphs_generated: dict[str: GraphCreate] = None
 
-    graphs_generated = graphicate.generate_graphs(
-        db_approx, methods_data
+    graphs_generated: list[GraphResponse] = graphicate.generate_graphs(
+        db_approx, methods_data, db
     )
 
-    if graphs_generated is None:
+    if (graphs_generated is None) or (graphs_generated == []):
         return status.HTTP_304_NOT_MODIFIED
+
+    new_approx, code = graphicate.relate_graphs(db_approx, db)
+
+    replace_approx(approx_id, new_approx, db)
+
+    if code == status.HTTP_204_NO_CONTENT:
+        return code
 
     return status.HTTP_201_CREATED

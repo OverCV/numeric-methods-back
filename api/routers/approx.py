@@ -14,10 +14,10 @@ from schemas.graph import GraphResponse
 from services.approx import (
     create_approx, read_approxs, read_approx,
     replace_approx, update_approx, remove_approx,
-    create_graphs,
-    read_graphs
+    approx_graphs,
 )
-
+from services.core.graphicate import read_graphs
+from services.core.constants import read_consts
 router = APIRouter()
 
 
@@ -105,30 +105,17 @@ async def delete_approx(approx_id: int, db: Session = Depends(get_db)) -> bool:
 @router.get('/{approx_id}/solve')
 async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> int:
     # Generate all graphs from models Euler, RK4 & RK45.
-    code = create_graphs(approx_id, db)
+    code = approx_graphs(approx_id, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:
         raise HTTPException(
             status_code=code,
             detail=f'approx id {approx_id} not found'
         )
+    # create_relations(db)
     return JSONResponse(
         status_code=code,
         content={DATA: jsonable_encoder(code)}
     )
-
-
-# @router.get('/{approx_id}/consts')
-# async def get_consts(approx_id: int, db: Session = Depends(get_db)) -> List[ConstantResponse]:
-#     consts: List[ConstantResponse] = read_consts(approx_id, db)
-#     if not consts:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail=f'consts not found: {consts}'
-#         )
-#     return JSONResponse(
-#         status_code=status.HTTP_200_OK,
-#         content={DATA: jsonable_encoder(consts)}
-#     )
 
 
 @router.get('/{approx_id}/graphs')
@@ -142,4 +129,18 @@ async def get_graphs(approx_id: int, db: Session = Depends(get_db)) -> List[Grap
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={DATA: jsonable_encoder(graphs)}
+    )
+
+
+@router.get('/{approx_id}/consts')
+async def get_consts(approx_id: int, db: Session = Depends(get_db)) -> List[ConstantResponse]:
+    consts: List[ConstantResponse] = read_consts(approx_id, db)
+    if not consts:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'consts not found: {consts}'
+        )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={DATA: jsonable_encoder(consts)}
     )

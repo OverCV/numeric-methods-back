@@ -8,8 +8,6 @@ class GraphRequest(BaseModel):
     image_url: str
     error_url: str
 
-    approximation_id: int
-
 
 class GraphCreate(GraphRequest):
     solution: float
@@ -20,4 +18,8 @@ class GraphUpdate(GraphRequest):
 
 
 class GraphResponse(GraphRequest):
+    approximation_id: int
     id: int
+
+    # class Config:
+    #     orm_mode = True

@@ -1,7 +1,9 @@
+from typing import Literal
+
+NG_LOCALE_URL: str = 'http://localhost:4200'
 EXP_FUNCTION: str = 'x * E**(t)'
 DATA: str = 'data'
-NG_LOCALE_URL: str = 'http://localhost:4200'
-IMG_DIR = 'images'
+IMG_DIR: str = 'images'
 
 IND_KEY: str = 'IND'
 DEP_KEY: str = 'DEP'
@@ -13,3 +15,5 @@ CONN_STRING_BS: str = 'DefaultEndpointsProtocol=https;AccountName=siedopy;Accoun
 
 CONTAINER_NAME: str = 'methods'
 BLOB_NAME: str = 'siedopy'
+
+REGEX: Literal = r'\b[_]*[a-zA-Z]+[a-zA-Z0-9_]*\b'

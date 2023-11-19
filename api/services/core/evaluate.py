@@ -40,16 +40,5 @@ def ln(values):
 
 
 # ! Parte del método Create_Graphs (como no sirve):
-    # # Crear directamente la instancia de Graph
-    # db_graph = instance_graph(euler_graph, db)
-    # # db_graph = Graph(**euler_graph, approximation_id=db_approx.id)
 
-    # # Asociar el Graph con Approximation
-    # db_approx.graphs.append(db_graph)
-    # db.commit()
-    # db.refresh(db_approx)
-
-    # print(db_approx.graphs)  # Verificar la asociación
-
-    # return ApproxRead(**db_approx.__dict__), status.HTTP_201_CREATED
 

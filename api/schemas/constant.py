@@ -18,3 +18,6 @@ class ConstantUpdate(ConstantRequest):
 class ConstantResponse(ConstantRequest):
     id: int
     approximation_id: int
+
+    # class Config:
+    #     orm_mode = True
