@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-from schemas.constant import ConstantRead
-from schemas.graph import GraphRead
+from schemas.constant import ConstantResponse
+from schemas.graph import GraphResponse
 from constants.const import *
 
 
-class BaseApprox(BaseModel):
+class ApproxRequest(BaseModel):
     title: str
     f: str
 
@@ -22,18 +22,16 @@ class BaseApprox(BaseModel):
     N: int
 
 
-class ApproxCreate(BaseApprox):
+class ApproxCreate(ApproxRequest):
     pass
 
 
-class ApproxUpdate(BaseApprox):
+class ApproxUpdate(ApproxRequest):
     pass
 
 
-class ApproxRead(BaseApprox):
-    result: float
-    f: str
+class ApproxResponse(ApproxRequest):
     id: int
 
-    constants: List[ConstantRead] = []
-    graphs: List[GraphRead] = []
+    # constants: List[ConstantRead] = []
+    # graphs: List[GraphRead] = []

@@ -2,19 +2,19 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 
 
-class BaseConstant(BaseModel):
+class ConstantRequest(BaseModel):
     name: str
     value: float
 
 
-class ConstantCreate(BaseConstant):
+class ConstantCreate(ConstantRequest):
     pass
 
 
-class ConstantUpdate(BaseConstant):
+class ConstantUpdate(ConstantRequest):
     pass
 
 
-class ConstantRead(BaseConstant):
+class ConstantResponse(ConstantRequest):
     id: int
     approximation_id: int

@@ -5,7 +5,9 @@ from middlewares.error import ErrorHandler
 
 from constants.const import NG_LOCALE_URL
 from database.db import Base, engine
-from routers import approx
+from routers import (
+    approx, graph, const
+)
 
 
 Base.metadata.create_all(bind=engine)
@@ -24,7 +26,8 @@ app.add_middleware(
 )
 
 app.include_router(approx.router, tags=['Approxs'], prefix='/approx')
-
+app.include_router(graph.router, tags=['Graphs'], prefix='/graph')
+app.include_router(const.router, tags=['Consts'], prefix='/const')
 
 @app.get('/')
 async def root():

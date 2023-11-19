@@ -13,8 +13,6 @@ class Approximation(Base):
     id: int = Column(Integer, primary_key=True, autoincrement=True)
     f: str = Column(String(255), default=EXP_FUNCTION)
 
-    result: float = Column(Float, default=0.0)
-
     title = Column(String(63), default=f'Approximation {id}')
 
     ind_var: str = Column(String(31), default='t0')
@@ -36,7 +34,7 @@ class Constant(Base):
     __tablename__ = 'constants'
     id: int = Column(Integer, primary_key=True, autoincrement=True)
     name: str = Column(String(31), nullable=False)
-    value: int = Column(Float)
+    value: float = Column(Float, default=0.0)
 
     approximation_id = Column(Integer, ForeignKey('approximations.id'))
     approximation = relationship('Approximation', back_populates='constants')
@@ -45,7 +43,9 @@ class Constant(Base):
 class Graph(Base):
     __tablename__ = 'graphs'
     id = Column(Integer, primary_key=True, autoincrement=True)
+
     title = Column(String(63), nullable=False)
+    solution: float = Column(Float, default=0.0)
 
     image_url = Column(String(255))
     error_url = Column(String(255))

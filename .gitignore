@@ -16,6 +16,8 @@ htmlcov/
 
 # Ignore the database
 *.sqlite3
+*.db
+*database.db
 
 # Ignore unitary tests
 tests/

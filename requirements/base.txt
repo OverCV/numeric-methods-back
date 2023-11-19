@@ -6,3 +6,6 @@ pydantic
 matplotlib
 numpy
 sympy
+scipy
+
+azure-storage-blob

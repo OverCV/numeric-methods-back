@@ -1,0 +1,68 @@
+from sqlalchemy.orm import Session
+from models.base import Graph
+from schemas.graph import GraphCreate, GraphResponse, GraphUpdate
+from typing import List
+
+def instance_graph(graph: GraphCreate, db: Session) -> Graph:
+    if exist_graph_title(graph.title, db):
+        return None
+
+    db_graph: Graph = Graph(**graph.model_dump())
+
+    db.add(db_graph)
+    db.commit()
+    db.refresh(db_graph)
+    return db_graph
+
+
+def create_graph(graph: GraphCreate, db: Session) -> GraphResponse:
+    if exist_graph_title(graph.title, db):
+        return None
+    db_graph: Graph = Graph(**graph.model_dump())
+
+    db.add(db_graph)
+    db.commit()
+    db.refresh(db_graph)
+    return GraphResponse(**db_graph.__dict__)
+
+
+def read_graphs(db: Session) -> List[GraphResponse]:
+    db_graphs: List[Graph] = db.query(Graph).all()
+    return [GraphResponse(**graph.__dict__) for graph in db_graphs]
+
+
+def read_graph(graph_id: int, db: Session) -> Graph:
+    db_graph: Graph = db.query(Graph).filter(
+        Graph.id == graph_id
+    ).first()
+    return Graph(**db_graph.__dict__)
+
+
+def drop_graph(graph_id: int, db: Session) -> bool:
+    if not exist_graph_id(graph_id, db):
+        return False
+
+    db_graph: Graph = db.query(Graph).filter(
+        Graph.id == graph_id
+    ).first()
+
+    if db_graph is None:
+        return False
+
+    db.delete(db_graph)
+    db.commit()
+    return True
+
+
+def exist_graph_id(approx_id: int, db: Session) -> bool:
+    db_graph: Graph = db.query(Graph).filter(
+        Graph.id == approx_id
+    ).first()
+    return False if db_graph is None else True
+
+
+def exist_graph_title(graph_title: str, db: Session) -> bool:
+    db_graph: Graph = db.query(Graph).filter(
+        Graph.title == graph_title
+    ).first()
+    return False if db_graph is None else True
