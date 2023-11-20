@@ -21,5 +21,5 @@ class GraphResponse(GraphRequest):
     approximation_id: int
     id: int
 
-    # class Config:
-    #     orm_mode = True
+    class Config:
+        orm_mode = True

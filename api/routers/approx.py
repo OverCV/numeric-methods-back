@@ -111,7 +111,6 @@ async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> int:
             status_code=code,
             detail=f'approx id {approx_id} not found'
         )
-    # create_relations(db)
     return JSONResponse(
         status_code=code,
         content={DATA: jsonable_encoder(code)}
@@ -121,6 +120,11 @@ async def solve_approx(approx_id: int, db: Session = Depends(get_db)) -> int:
 @router.get('/{approx_id}/graphs')
 async def get_graphs(approx_id: int, db: Session = Depends(get_db)) -> List[GraphResponse]:
     graphs: List[GraphResponse] = read_graphs(approx_id, db)
+    if graphs == []:
+        raise HTTPException(
+            status_code=status.HTTP_204_NO_CONTENT,
+            detail=f'graphs not found: {graphs}'
+        )
     if not graphs:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -135,6 +139,11 @@ async def get_graphs(approx_id: int, db: Session = Depends(get_db)) -> List[Grap
 @router.get('/{approx_id}/consts')
 async def get_consts(approx_id: int, db: Session = Depends(get_db)) -> List[ConstantResponse]:
     consts: List[ConstantResponse] = read_consts(approx_id, db)
+    if consts == []:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=f'consts not found: {consts}'
+        )
     if not consts:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

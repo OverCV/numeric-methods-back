@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from models.base import Approximation, Graph
 from typing import Optional, List
 
 from schemas.constant import ConstantResponse
@@ -21,6 +22,8 @@ class ApproxRequest(BaseModel):
     h: float
     N: int
 
+    
+
 
 class ApproxCreate(ApproxRequest):
     pass
@@ -36,5 +39,5 @@ class ApproxResponse(ApproxRequest):
     # graphs: List[GraphResponse] = []
     # constants: List[ConstantResponse] = []
 
-    # class Config:
-    #     orm_mode = True
+    class Config:
+        orm_mode = True

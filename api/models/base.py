@@ -35,6 +35,9 @@ class Approximation(Base):
         cascade='all, delete-orphan'
     )
 
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Constant(Base):
     __tablename__ = 'constants'
@@ -44,6 +47,9 @@ class Constant(Base):
 
     approximation_id: int = Column(Integer, ForeignKey('approximations.id'))
     approximation = relationship('Approximation', back_populates='constants')
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class Graph(Base):
@@ -60,3 +66,6 @@ class Graph(Base):
         Integer, ForeignKey('approximations.id'), nullable=True
     )
     approximation = relationship('Approximation', back_populates='graphs',)
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

@@ -15,7 +15,7 @@ def create_const(approx_id: int, const: ConstantCreate, db: Session) -> Constant
     if related_names(const.name, approx_id, db):
         return None, status.HTTP_406_NOT_ACCEPTABLE
 
-    db_const: Constant = Constant(**const.model_dump())
+    db_const: Constant = Constant(**const.dict())
     db_const.approximation_id = approx_id
 
     db.add(db_const)

@@ -14,10 +14,11 @@ def generate_graphs(
     db: Session,
     graphs_data: list = []
 ) -> dict[str: GraphCreate]:
-    for key, data in datasource.items():
+    for method_key, data in datasource.items():
+        print(f'\n{method_key}\n')
         image_path: str | None = store_graph(
             approx.id,
-            key, 'image',
+            method_key, 'image',
             approx.ind_var, data[IND_KEY],
             approx.dep_var, data[DEP_KEY],
             approx.f
@@ -25,7 +26,7 @@ def generate_graphs(
 
         error_path: str | None = store_graph(
             approx.id,
-            key, 'error',
+            method_key, 'error',
             approx.ind_var, data[IND_KEY],
             approx.dep_var, data[ERR_KEY],
             approx.f
@@ -35,7 +36,7 @@ def generate_graphs(
             return status.HTTP_409_CONFLICT
 
         graph = GraphCreate(
-            title=f'Euler {approx.title} Graph',
+            title=method_key,
             image_url=image_path,
             error_url=error_path,
             approximation_id=approx.id,
@@ -61,15 +62,11 @@ def generate_graphs(
     # return ApproxRead(**db_approx.__dict__), status.HTTP_201_CREATED
 
 
-def relate_graphs(approx: Approximation, db: Session):
-    related_graphs: Graph = db.query(Graph).filter(
-        Graph.approximation_id == approx.id
-    ).all()
+def relate_graphs(approx: Approximation, new_graphs: list[GraphResponse], db: Session):
+    if new_graphs is None:
+        return None, status.HTTP_410_GONE
 
-    if related_graphs is None:
-        return None, status.HTTP_204_NO_CONTENT
-
-    approx.graphs: List[Graph] = related_graphs  # !?!
+    approx.graphs: List[Graph] = new_graphs
     db.commit()
     db.refresh(approx)
 

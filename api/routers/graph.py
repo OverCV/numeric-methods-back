@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, FileResponse
 from sqlalchemy.orm import Session
+
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+
 from typing import List
 
 
@@ -56,3 +59,14 @@ async def delete_graphs(approx_id: int, db: Session = Depends(get_db)):
         status_code=status.HTTP_200_OK,
         content={DATA: jsonable_encoder(graph_dropped)}
     )
+
+
+# @router.post('/', response_model=GraphResponse)
+# def upload_to_azure(blob_service_client, data):
+#     blob_client = blob_service_client.get_blob_client(
+#         container=CONTAINER_NAME, blob=BLOB_NAME
+#     )
+#     blob_client.upload_blob(data)
+
+
+# router.mount("/images", StaticFiles(directory="backend/images"), name="images")

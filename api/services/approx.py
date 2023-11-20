@@ -16,7 +16,7 @@ from services.core import constants, graphicate
 def create_approx(approximation: ApproxCreate, db: Session) -> ApproxResponse:
     if vh.exist_approx_title(approximation.title, db):
         return None
-    db_approx: Approximation = Approximation(**approximation.model_dump())
+    db_approx: Approximation = Approximation(**approximation.dict())
 
     if db_approx.f == '' or db_approx.f is None:
         db_approx.f: str = f'{db_approx.dep_var} + E**({db_approx.ind_var})'
@@ -41,19 +41,18 @@ def read_approx(approx_id: int, db: Session) -> ApproxResponse:
 
 def replace_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxResponse:
     if not vh.exist_approx_id(approx_id, db):
-        return None
-
-    if vh.exist_approx_title(approx.title, db):
+        print('\nID ALREADY EXISTS\n')
         return None
 
     if not vh.validate_vars(approx):
+        print('\nVARIABLE ALREADY EXISTS\n')
         return None
 
     db_approx: Approximation = db.query(Approximation).filter(
         Approximation.id == approx_id
     ).first()
 
-    for key, value in approx.model_dump().items():
+    for key, value in approx.dict().items():
         setattr(db_approx, key, value)
 
     if db_approx.f == '' or db_approx.f is None:
@@ -70,19 +69,22 @@ def update_approx(approx_id: int, approx: ApproxUpdate, db: Session) -> ApproxRe
         Approximation.id == approx_id
     ).first()
 
-    if vh.exist_approx_title(approx.title, db):
-        return None
+    # if vh.exist_approx_title(approx.title, db):
+    #     return None
 
     if vh.exist_approx_const_title(approx, db):
         return None
 
-    for key, value in db_approx.model_dump().items():
+    for key, value in db_approx.dict().items():
         if (value is None) or (value == ''):
             setattr(db_approx, approx[key], approx[value])
     db.commit()
     db.refresh(db_approx)
 
     return ApproxResponse(**db_approx.__dict__)
+
+# GET /approx/ HTTP/1.1
+# PUT /approx/5 HTTP/1.1
 
 
 def remove_approx(approx_id: int, db: Session) -> bool:
@@ -139,9 +141,9 @@ def approx_graphs(approx_id: int, db: Session) -> int:
     # )
 
     methods_data: dict[str, dict[str, list[float]]] = {
-        'euler': euler_data,
-        'rk2': rk2_data,
-        'rk4': rk4_data
+        EULER: euler_data,
+        RK2: rk2_data,
+        RK4: rk4_data
     }
 
     graphs_generated: dict[str: GraphCreate] = None
@@ -153,11 +155,13 @@ def approx_graphs(approx_id: int, db: Session) -> int:
     if (graphs_generated is None) or (graphs_generated == []):
         return status.HTTP_304_NOT_MODIFIED
 
-    new_approx, code = graphicate.relate_graphs(db_approx, db)
+    # new_approx, code = graphicate.relate_graphs(
+    #     db_approx, graphs_generated, db
+    # )
 
-    replace_approx(approx_id, new_approx, db)
+    # replace_approx(approx_id, new_approx, db)
 
-    if code == status.HTTP_204_NO_CONTENT:
-        return code
+    # if code == status.HTTP_410_GONE:
+    #     return code
 
     return status.HTTP_201_CREATED
