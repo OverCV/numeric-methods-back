@@ -5,7 +5,7 @@ from sqlalchemy import (
 )
 
 from database.db import Base
-from constants.const import *
+from constants.const import EXP_FUNCTION
 
 
 class Approximation(Base):
@@ -27,7 +27,7 @@ class Approximation(Base):
     N: int = Column(Integer)
 
     constants = relationship(
-        'Constant', back_populates='approximation',        uselist=True,
+        'Constant', back_populates='approximation', uselist=True,
         cascade='all, delete-orphan'
     )
     graphs = relationship(
@@ -42,21 +42,21 @@ class Constant(Base):
     name: str = Column(String(31), nullable=False)
     value: float = Column(Float, default=0.0)
 
-    approximation_id = Column(Integer, ForeignKey('approximations.id'))
+    approximation_id: int = Column(Integer, ForeignKey('approximations.id'))
     approximation = relationship('Approximation', back_populates='constants')
 
 
 class Graph(Base):
     __tablename__ = 'graphs'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
 
-    title = Column(String(63), nullable=False)
+    title: str = Column(String(63), nullable=False)
     solution: float = Column(Float, default=0.0)
 
-    image_url = Column(String(255))
-    error_url = Column(String(255))
+    image_url: str = Column(String(255))
+    error_url: str = Column(String(255))
 
-    approximation_id = Column(
+    approximation_id: int = Column(
         Integer, ForeignKey('approximations.id'), nullable=True
     )
     approximation = relationship('Approximation', back_populates='graphs',)
