@@ -21,3 +21,9 @@ htmlcov/
 
 # Ignore unitary tests
 tests/
+
+# Images files
+*images/
+*.jpg
+*.jpeg
+*.png

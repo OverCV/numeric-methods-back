@@ -7,5 +7,6 @@ matplotlib
 numpy
 sympy
 scipy
+numexpr
 
 azure-storage-blob

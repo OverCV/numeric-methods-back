@@ -21,7 +21,7 @@ from services.core.constants import read_consts
 router = APIRouter()
 
 
-@router.post('/', response_model=ApproxResponse)
+@router.post('/post', response_model=ApproxResponse)
 async def post_approx(approx: ApproxCreate, db: Session = Depends(get_db)):
     created_approx: ApproxResponse = create_approx(approx, db)
     if created_approx is None:
@@ -35,7 +35,7 @@ async def post_approx(approx: ApproxCreate, db: Session = Depends(get_db)):
     )
 
 
-@router.get('/', response_model=List[ApproxResponse])
+@router.get('/all', response_model=List[ApproxResponse])
 async def get_approxs(db: Session = Depends(get_db)) -> List[ApproxResponse]:
     approxs: List[ApproxResponse] = read_approxs(db)
     if not approxs:
@@ -49,7 +49,7 @@ async def get_approxs(db: Session = Depends(get_db)) -> List[ApproxResponse]:
     )
 
 
-@router.get('/{approx_id}', response_model=ApproxResponse)
+@router.get('/by_id/{approx_id}', response_model=ApproxResponse)
 async def get_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxResponse:
     approx: ApproxResponse = read_approx(approx_id, db)
     if approx is None:
@@ -63,7 +63,7 @@ async def get_approx(approx_id: int, db: Session = Depends(get_db)) -> ApproxRes
     )
 
 
-@router.put('/{approx_id}', response_model=ApproxResponse)
+@router.put('/put/{approx_id}', response_model=ApproxResponse)
 async def put_approx(approx_id: int, approx: ApproxUpdate, db: Session = Depends(get_db)) -> ApproxResponse:
     replacer_approx: ApproxResponse = replace_approx(approx_id, approx, db)
     if replacer_approx is None:
@@ -77,7 +77,7 @@ async def put_approx(approx_id: int, approx: ApproxUpdate, db: Session = Depends
     )
 
 
-@router.patch('/{approx_id}', response_model=ApproxResponse)
+@router.patch('/patch/{approx_id}', response_model=ApproxResponse)
 async def patch_approx(approx_id: int, approx: ApproxUpdate, db: Session = Depends(get_db)) -> ApproxResponse:
     patcher_approx: ApproxResponse = update_approx(approx_id, approx, db)
     if patcher_approx is None:
@@ -91,7 +91,7 @@ async def patch_approx(approx_id: int, approx: ApproxUpdate, db: Session = Depen
     )
 
 
-@router.delete('/{approx_id}')
+@router.delete('/delete/{approx_id}')
 async def delete_approx(approx_id: int, db: Session = Depends(get_db)) -> bool:
     existed_approx: bool = remove_approx(approx_id, db)
     status_code: int = status.HTTP_200_OK\

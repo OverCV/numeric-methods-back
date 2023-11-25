@@ -9,13 +9,13 @@ from constants.const import DATA
 from schemas.constant import ConstantCreate, ConstantResponse, ConstantUpdate
 from services.const import (
     create_const, read_consts, read_const, update_const,
-    remove_const
+    remove_const, read_by_approx
 )
 
 router = APIRouter()
 
 
-@router.get('/', response_model=List[ConstantResponse])
+@router.get('/all', response_model=List[ConstantResponse])
 async def get_consts(db: Session = Depends(get_db)) -> List[ConstantResponse]:
     consts: List[ConstantResponse] = read_consts(db)
     if not consts:
@@ -29,7 +29,21 @@ async def get_consts(db: Session = Depends(get_db)) -> List[ConstantResponse]:
     )
 
 
-@router.post('/{approx_id}', response_model=ConstantResponse)
+@router.get('/by_approx/{approx_id}', response_model=List[ConstantResponse])
+async def get_by_approx(approx_id: int, db: Session = Depends(get_db)) -> List[ConstantResponse]:
+    consts: List[ConstantResponse] = read_by_approx(approx_id, db)
+    if not consts:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'consts not found: {consts}'
+        )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={DATA: jsonable_encoder(consts)}
+    )
+
+
+@router.post('/post/{approx_id}', response_model=ConstantResponse)
 async def post_const(approx_id: int, const: ConstantCreate, db: Session = Depends(get_db)):
     created_const, code = create_const(approx_id, const, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:
@@ -43,7 +57,7 @@ async def post_const(approx_id: int, const: ConstantCreate, db: Session = Depend
     )
 
 
-@router.get('/{const_id}')
+@router.get('/by_id/{const_id}')
 async def get_const(const_id: int, db: Session = Depends(get_db)) -> ConstantResponse:
     const, code = read_const(const_id, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:
@@ -57,7 +71,7 @@ async def get_const(const_id: int, db: Session = Depends(get_db)) -> ConstantRes
     )
 
 
-@router.put('/{const_id}', response_model=ConstantResponse)
+@router.put('/put/{const_id}', response_model=ConstantResponse)
 async def put_const(const_id: int, const: ConstantUpdate, db: Session = Depends(get_db)):
     updated_const, code = update_const(const_id, const, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:
@@ -71,7 +85,7 @@ async def put_const(const_id: int, const: ConstantUpdate, db: Session = Depends(
     )
 
 
-@router.delete('/{const_id}', response_model=ConstantResponse)
+@router.delete('/delete/{const_id}', response_model=ConstantResponse)
 async def delete_const(const_id: int, db: Session = Depends(get_db)):
     deleted_const, code = remove_const(const_id, db)
     if code >= status.HTTP_300_MULTIPLE_CHOICES:

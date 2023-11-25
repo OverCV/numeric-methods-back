@@ -8,9 +8,11 @@ class GraphRequest(BaseModel):
     image_url: str
     error_url: str
 
+    solution: float
+
 
 class GraphCreate(GraphRequest):
-    solution: float
+    pass
 
 
 class GraphUpdate(GraphRequest):

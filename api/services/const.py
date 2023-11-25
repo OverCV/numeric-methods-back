@@ -38,12 +38,27 @@ def read_consts(db: Session) -> List[ConstantResponse]:
     return [ConstantResponse(**const.__dict__) for const in db_consts]
 
 
+def read_by_approx(approx_id: int, db: Session) -> List[ConstantResponse]:
+    db_consts: List[Constant] = db.query(Constant).filter(
+        Constant.approximation_id == approx_id
+    ).all()
+    return [ConstantResponse(**const.__dict__) for const in db_consts]
+
+
 def update_const(const_id: int, const: ConstantUpdate, db: Session) -> ConstantResponse:
+
     db_const: Constant = db.query(Constant).filter(
         Constant.id == const_id
     ).first()
+
     if db_const is None:
         return None, status.HTTP_404_NOT_FOUND
+
+    if exist_name_by_id(const.name, db_const.approximation_id, db):
+        return None, status.HTTP_409_CONFLICT
+
+    if related_names(const.name, db_const.approximation_id, db):
+        return None, status.HTTP_406_NOT_ACCEPTABLE
 
     db_const.name, db_const.value = const.name, const.value
 

@@ -22,8 +22,6 @@ class ApproxRequest(BaseModel):
     h: float
     N: int
 
-    
-
 
 class ApproxCreate(ApproxRequest):
     pass

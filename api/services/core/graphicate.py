@@ -15,7 +15,6 @@ def generate_graphs(
     graphs_data: list = []
 ) -> dict[str: GraphCreate]:
     for method_key, data in datasource.items():
-        print(f'\n{method_key}\n')
         image_path: str | None = store_graph(
             approx.id,
             method_key, 'image',
